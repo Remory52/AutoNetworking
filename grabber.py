@@ -5,11 +5,11 @@ from os import listdir
 from os.path import isfile, join
 from imutils.object_detection import non_max_suppression
 
-colors = {"pc.PNG" : (0, 0, 0), "router.PNG" : (255, 0, 0), "server.PNG" : (0, 255, 0), "switch.PNG" : (0, 0, 255)}
+
 
 templateDir = "templates/"
 templates = [f for f in listdir(templateDir) if isfile(join(templateDir, f))]
-image = cv2.imread("frame1.PNG")
+image = cv2.imread("feladat.jpg")
 thres = 0.5
 
 imageGray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -54,3 +54,7 @@ for ((startX, startY, endX, endY), pattern) in pair:
 
 cv2.imshow("Recognition", cv2.resize(image, dsize=(0, 0), fx=0.5, fy=0.5))
 cv2.waitKey(0)
+
+
+#screenshot = pyautogui.screenshot()
+#image = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)

@@ -5,21 +5,19 @@ from os import listdir
 from os.path import isfile, join
 from imutils.object_detection import non_max_suppression
 
-from sieve import Sieve as filter
+colors = {"pc.PNG" : (0, 0, 0), "router.PNG" : (255, 0, 0), "server.PNG" : (0, 255, 0), "switch.PNG" : (0, 0, 255)}
 
 templateDir = "templates/"
 templates = [f for f in listdir(templateDir) if isfile(join(templateDir, f))]
-image = cv2.imread("feladat.jpg")
-#image = filter.wash(image)
-#image = filter.wash(filter.sieve(image))
+image = cv2.imread("frame1.PNG")
 thres = 0.5
 
 imageGray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
 boxes = []
+pair = []
 
 for template in templates:
-    print(templateDir + template)
     templateGray = cv2.resize(cv2.imread(templateDir + template, cv2.IMREAD_GRAYSCALE), dsize=(0, 0), fx=0.3, fy=0.3)
     (tH, tW) = templateGray.shape[:2]
 
@@ -33,14 +31,26 @@ for template in templates:
     filtered = non_max_suppression(np.array(rects))
     
     for x in filtered:
-        boxes.append((x, template))
+        boxes.append(x)
+        pair.append((x, template))
 
     color = (rnd.randint(0, 255), 0, rnd.randint(0, 255))
 
 recognitions = non_max_suppression(np.array(boxes))
+tmp = pair.copy()
 
-for (startX, startY, endX, endY) in recognitions:
-    cv2.rectangle(image, (startX, startY), (endX, endY), (0, 0, 255), 2)
+removedCount = 0
+for i in range(0, len(pair)):
+    (box, template) = pair[i]
 
-cv2.imshow("Recognition", cv2.resize(image, dsize=(0, 0), fx=0.8, fy=0.8))
+    if(box not in recognitions):
+        tmp.pop(i - removedCount)
+        removedCount += 1
+
+pair = tmp.copy()
+
+for ((startX, startY, endX, endY), pattern) in pair:
+    cv2.rectangle(image, (startX, startY), (endX, endY), colors[pattern], 4)
+
+cv2.imshow("Recognition", cv2.resize(image, dsize=(0, 0), fx=0.5, fy=0.5))
 cv2.waitKey(0)

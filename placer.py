@@ -12,8 +12,36 @@ switches = (50, 1020)
 PT_router = (600, 950)
 switch2960 = (230, 950)
 
-def plant(starting, pairs, places):
-    pass
+putPC = [end_device, pc]
+putServer = [end_device, server]
+putSwitch = [network_device, switches, switch2960]
+putRouter = [network_device, routers, PT_router]
+
+def plant(pairs, places):
+    devices = np.array(pairs, dtype=object)[0:len(pairs), 1:2]
+
+    initial = pyautogui.position()
+    
+    for (place, device) in zip(places, devices):
+        cycle = []
+        if(device == "pc.PNG"):
+            cycle = putPC
+        if(device == "server.PNG"):
+            cycle = putServer
+        if(device == "switch.PNG"):
+            cycle = putSwitch
+        if(device == "router.PNG"):
+            cycle = putRouter
+
+        #deviceLocation = addVectorToPoint(initial, place)
+        #cycle.append(deviceLocation)
+
+        for (x, y) in cycle:
+            #print(f"Moving to: x: {x} y: {y} | Device is: {device} | Designed location is: {deviceLocation}")
+            pyautogui.moveTo(x, y)
+            pyautogui.click()
+        pyautogui.click()
+        cycle.clear()
 
 def estimate(pairs):
     positions = np.array(pairs, dtype=object)[0:len(pairs), 0:1]

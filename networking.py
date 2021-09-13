@@ -13,7 +13,7 @@ for ((startX, startY, endX, endY), pattern) in pairs:
     cv2.rectangle(image, (startX, startY), (endX, endY), colors[pattern], 4)
 
 for p in y:
-    cv2.circle(image, p, 6, (0, 100, 255), -1)
+    cv2.circle(image, placer.addVectorToPoint((550, 500), p), 6, (0, 100, 255), -1)
 
 cv2.imshow("Detection", image)
 cv2.waitKey(0)

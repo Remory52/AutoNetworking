@@ -25,24 +25,22 @@ def plant(pairs, places):
     for (place, device) in zip(places, devices):
         cycle = []
         if(device == "pc.PNG"):
-            cycle = putPC
+            cycle += putPC
         if(device == "server.PNG"):
-            cycle = putServer
+            cycle += putServer
         if(device == "switch.PNG"):
-            cycle = putSwitch
+            cycle += putSwitch
         if(device == "router.PNG"):
-            cycle = putRouter
+            cycle += putRouter
 
-        #deviceLocation = addVectorToPoint(initial, place)
-        #cycle.append(deviceLocation)
+        deviceLocation = addVectorToPoint(initial, place)
+        cycle.append(deviceLocation)
 
         for (x, y) in cycle:
-            #print(f"Moving to: x: {x} y: {y} | Device is: {device} | Designed location is: {deviceLocation}")
+            print(f"Moving to: x: {x} y: {y} | Device is: {device} | Designed location is: {deviceLocation}")
             pyautogui.moveTo(x, y)
             pyautogui.click()
-        pyautogui.click()
-        cycle.clear()
-
+            
 def estimate(pairs):
     positions = np.array(pairs, dtype=object)[0:len(pairs), 0:1]
     top = [x[0][1] for x in positions]

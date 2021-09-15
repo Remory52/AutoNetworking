@@ -1,6 +1,7 @@
 import pyautogui
 import cv2
 import numpy as np
+import maths
 
 end_device = (50, 950)
 pc = (230, 950)
@@ -33,7 +34,7 @@ def plant(pairs, places):
         if(device == "router.PNG"):
             cycle += putRouter
 
-        deviceLocation = addVectorToPoint(initial, place)
+        deviceLocation = maths.addVectorToPoint(initial, place)
         cycle.append(deviceLocation)
 
         for (x, y) in cycle:
@@ -48,29 +49,10 @@ def estimate(pairs):
     rootIndex = top.index(min(top))
     root = positions[rootIndex]
 
-    rootCenter = getCenter(root[0])
+    rootCenter = maths.getCenter(root[0])
     places = []
     for rects in positions:
-        (vx, vy) = vectorHeading(rootCenter, getCenter(rects[0]))
+        (vx, vy) = maths.vectorHeading(rootCenter, maths.getCenter(rects[0]))
         places.append((vx, vy))
 
-    #poses.remove(rootCenter)
-    #poses.insert(0, rootCenter)
-
     return places
-
-def getCenter(rect):
-    (startX, startY, endX, endY) = rect
-    center = (int(startX + ((endX - startX) / 2)), (int(endY - ((endY - startY) / 2))))
-    return center
-
-def vectorHeading(p1, p2):
-    x1, y1 = p1
-    x2, y2 = p2
-
-    vx = int(x2 - x1)
-    vy = int(y2 - y1)
-    return (vx, vy)
-
-def addVectorToPoint(vector, point):
-    return tuple(map(lambda a, b: a + b, vector, point))

@@ -3,6 +3,7 @@ import numpy as np
 from os import listdir
 from os.path import isfile, join
 from imutils.object_detection import non_max_suppression
+import maths
 
 def identify(image, templateDir, threshold=0.5):    
     boxes = []
@@ -37,5 +38,26 @@ def identify(image, templateDir, threshold=0.5):
         if(box not in recognitions):
             tmp.pop(i - removedCount)
             removedCount += 1
+
+    recognitionCenters = [maths.getCenter(x[0]) for x in tmp]
+    dist = []
+    overlapping = [] #store indexes of overlapping boxes
+
+    for ii in range(0, len(tmp)):
+        (box, template) = tmp[ii]
+        if(template == "pc.PNG" or template == "server.PNG"):
+            continue
+
+        boxCenter = maths.getCenter(box)
+        dist = [maths.getDistance(boxCenter, x) for x in recognitionCenters]
+
+        collisionID = [i for i in range(len(dist)) if dist[i] == 1]
+
+        if len(collisionID) == 1:
+            overlapping.append(collisionID[0])
+        
+    if 1 <= len(overlapping):
+        for ovI in overlapping:
+            del tmp[ovI]
 
     return tmp
